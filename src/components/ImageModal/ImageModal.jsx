@@ -1,5 +1,5 @@
 const ImageModal = () => {
-  return <div>ImageModal</div>;
+  return <div></div>;
 };
 
 export default ImageModal;

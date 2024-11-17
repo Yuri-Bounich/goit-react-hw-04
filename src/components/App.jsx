@@ -19,33 +19,47 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   // 10) створюємо змінну для помилок
   const [isError, setIsError] = useState(false);
-
+  // 18) створюємо змінну  для query із компоненту SearchBar
+  const [query, setQuery] = useState('star');
+  // 25) створюємо змінну для page (сторінки) з початковим значенням 1
+  const [page, setPage] = useState(1);
+  // 30) створюємо стейт для визначення кількості сторінок щоб управляти кнопкою лоадмор
+  const [total_pages, setTotal_pages] = useState(0);
   // 2)створюємо юсеф для запиту
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        // 7) передпочатком запиту показуємо лоадер
-        setIsLoading(true);
-        setIsError(false);
-        const response = await axios.get(
-          'https://api.unsplash.com/search/photos?client_id=1XVhfs4mUzOdwNBmD94EeUhJyEiTHj8y6Dfez-zNpns&query=girl&page=1&per_page=12'
-        );
-
-        // //8) ховаємо лоадер
-        // setIsLoading(false); це перенесли в finally
-        setImages(response.data.results);
-      } catch (error) {
-        // 11) показуємо помилку через true
-        setIsError(true);
-        console.log(error);
-      } finally {
-        // 13) виключаємо лоадер і видаляємо пункт 8
-        setIsLoading(false);
-      }
-    };
-    //переробл варіант що нижче асинхронно
-    getData();
-  }, []);
+  useEffect(
+    () => {
+      const getData = async () => {
+        try {
+          // 7) передпочатком запиту показуємо лоадер
+          setIsLoading(true);
+          setIsError(false);
+          // 23) вставляємо query в якості слова-запиту // 31) передаємо totalPages
+          const response = await axios.get(
+            `https://api.unsplash.com/search/photos?client_id=1XVhfs4mUzOdwNBmD94EeUhJyEiTHj8y6Dfez-zNpns&query=${query}&page=${page}&per_page=12`
+          );
+          // 32) при кожному запиті встановлюємо номер сторінки
+          setTotal_pages(response.data.total_pages);
+          // //8) ховаємо лоадер
+          // setIsLoading(false); це перенесли в finally
+          // 28) розсипаємо і заново збираємо масив щоб добавити картинки при кнопці лоад мор
+          // викристовуємо прев щоб не було циклічності
+          setImages(prev => [...prev, ...response.data.results]);
+        } catch (error) {
+          // 11) показуємо помилку через true
+          setIsError(true);
+          console.log(error);
+        } finally {
+          // 13) виключаємо лоадер і видаляємо пункт 8
+          setIsLoading(false);
+        }
+      };
+      //переробл варіант що нижче асинхронно
+      getData();
+    },
+    // 24) query вказується як залежність для useEffect - Це означає, що функція всередині useEffect буде виконуватися щоразу,
+    //коли значення залежностей змінюється
+    [query, page]
+  );
 
   // !!!альтернативний варіант записати пункт 2
   // useEffect(() => {
@@ -57,18 +71,34 @@ const App = () => {
   //   //then тут зберігає результати (results вданому випадку. його назву беремо з відвовіді бекенду, мережа в консолі або тандер клієнт в вскод)
   // }, []);
 
+  // 19) створеня функції для зміни стану інпуту
+  const handleChangeQuery = query => {
+    setQuery(query);
+    // 29) при зміні запиту створюємо новий масив щоб при лоад мор фото не добавлялось в діючий масив
+    setImages([]);
+    // 30) при зміні запиту скидаємо нумерацію сторінок, якщо не зробити буде зі стейту підгружатись дібча сторінка
+    setPage(1);
+  };
+
+  // 27) створеня функції для зміни стану кількості завантаж сторінок
+  const handleLoad = () => {
+    setPage(page => page + 1);
+  };
+
   return (
     <div>
-      <SearchBar />
+      {/* 20) передаємо результат handleChangeQuery в SearchBar*/}
+      <SearchBar onSubmit={handleChangeQuery} />
       {/* 9) умовний рендеринг - якщо isLoading - true то лоадер рендериться, якщо false - то не рендериться */}
       {isLoading && <Loader />}
       <ImageModal />
-      <LoadMoreBtn />
       <ImageCard />
       <ImageGallery images={images} /> {/* 3) передаємо отриманий рез в чілдр*/}
       {/* 12) умовний рендеринг - якщо isError - true то помилка рендериться, якщо false - то не рендериться */}
       {isError && <ErrorMessage />}
       {/* <Work /> */}
+      {/* 33) якщо більше чим - показуємо кнопку. інакше не показуємо */}
+      {total_pages > page && <LoadMoreBtn handleLoad={handleLoad} />}
     </div>
   );
 };

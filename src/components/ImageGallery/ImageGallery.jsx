@@ -1,7 +1,7 @@
 import ImageCard from '../ImageCard/ImageCard';
 import s from './ImageGallery.module.css';
 
-const ImageGallery = ({ images }) => {
+const ImageGallery = ({ images, onImageClick }) => {
   //console.log(images);
   // фільтрація для видалення дубльованих записів. консоль видавала помилку і АРІ повертаєдубльований масив(через консольлог видно)
   const uniqueImages = images.filter(
@@ -12,7 +12,12 @@ const ImageGallery = ({ images }) => {
       <ul className={s.gallery}>
         {/* 4) розмепуємо обєкт */}
         {uniqueImages.map(post => (
-          <li key={post.id}>
+          <li
+            key={post.id}
+            onClick={() =>
+              onImageClick(post)
+            } /* 40)встановлення функції на клік */
+          >
             {/* Використовується унікальний ключ */}
             <ImageCard post={post.urls.small} alt={post.alt_description} />
           </li>

@@ -25,6 +25,11 @@ const App = () => {
   const [page, setPage] = useState(1);
   // 30) створюємо стейт для визначення кількості сторінок щоб управляти кнопкою лоадмор
   const [total_pages, setTotal_pages] = useState(0);
+  // 34) стейт для модалки
+  const [isOpen, setIsOpen] = useState(true);
+  // 36) стейт для стану вибраної картинки
+  const [selectedImage, setSelectedImage] = useState(null);
+
   // 2)створюємо юсеф для запиту
   useEffect(
     () => {
@@ -85,15 +90,38 @@ const App = () => {
     setPage(page => page + 1);
   };
 
+  // 37) функції відкриття модалки приймає пост
+  const openModal = post => {
+    setSelectedImage(post);
+    setIsOpen(true);
+  };
+
+  // 38) функція закриття модалки знімає пост та закриває модалку
+  const closeModal = () => {
+    setSelectedImage(null);
+    setIsOpen(false);
+  };
+
   return (
     <div>
       {/* 20) передаємо результат handleChangeQuery в SearchBar*/}
       <SearchBar onSubmit={handleChangeQuery} />
       {/* 9) умовний рендеринг - якщо isLoading - true то лоадер рендериться, якщо false - то не рендериться */}
       {isLoading && <Loader />}
-      <ImageModal />
+      {/* 35) умовний рендеринг і  39) передача пропсів в модал: стан,картинка, альт*/}
+      {isOpen && selectedImage && (
+        <ImageModal
+          isOpen={isOpen}
+          closeModal={closeModal}
+          post={selectedImage.urls.regular}
+          alt={selectedImage.alt_description}
+          user={selectedImage.user.name}
+          location={selectedImage.user.location}
+        />
+      )}
       <ImageCard />
-      <ImageGallery images={images} /> {/* 3) передаємо отриманий рез в чілдр*/}
+      <ImageGallery images={images} onImageClick={openModal} />{' '}
+      {/* 3) передаємо отриманий рез в чілдр 39) передаємо пропс для визначення кліку*/}
       {/* 12) умовний рендеринг - якщо isError - true то помилка рендериться, якщо false - то не рендериться */}
       {isError && <ErrorMessage />}
       {/* <Work /> */}

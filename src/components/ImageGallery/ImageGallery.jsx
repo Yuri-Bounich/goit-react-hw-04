@@ -12,17 +12,15 @@ const ImageGallery = ({ images, onImageClick }) => {
       <ul className={s.gallery}>
         {/* 4) розмепуємо обєкт */}
         {uniqueImages.map(post => (
-          <li
-            key={post.id}
-            onClick={() =>
-              onImageClick(post)
-            } /* 40)встановлення функції на клік */
-          >
+          <li key={post.id}>
             {/* Використовується унікальний ключ */}
             <ImageCard
               className={s.imageCard}
               post={post.urls.small}
               alt={post.alt_description}
+              onClick={() =>
+                onImageClick(post)
+              } /* 40)встановлення функції на клік */
             />
           </li>
         ))}

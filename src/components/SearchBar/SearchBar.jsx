@@ -11,7 +11,7 @@ const SearchBar = ({ onSubmit }) => {
   const handleSubmit = (values, options) => {
     //17)очищення форми
     options.resetForm();
-    console.log(values);
+    // console.log(values);
     // 22) викликаємо функцію при сабміті
     onSubmit(values.query);
   };

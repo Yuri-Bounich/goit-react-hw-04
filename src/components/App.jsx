@@ -119,8 +119,10 @@ const App = () => {
           location={selectedImage.user.location}
         />
       )}
-      <ImageCard />
-      <ImageGallery images={images} onImageClick={openModal} />{' '}
+      <ImageGallery images={images} onImageClick={openModal}>
+        <ImageCard />
+      </ImageGallery>
+
       {/* 3) передаємо отриманий рез в чілдр 39) передаємо пропс для визначення кліку*/}
       {/* 12) умовний рендеринг - якщо isError - true то помилка рендериться, якщо false - то не рендериться */}
       {isError && <ErrorMessage />}

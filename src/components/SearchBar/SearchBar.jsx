@@ -1,4 +1,5 @@
 import { Field, Form, Formik } from 'formik';
+import s from './SearchBar.module.css';
 
 // 21)приймаємо onSubmit
 const SearchBar = ({ onSubmit }) => {
@@ -29,19 +30,22 @@ const SearchBar = ({ onSubmit }) => {
   //   form.reset();
   // };
   return (
-    <header>
+    <header className={s.block}>
       {/*14) створюємо форму через Формік */}
       {/*18) initialValues onSubmit навішуємо на Формік */}
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-        <Form>
+        <Form className={s.form}>
           <Field
+            className={s.input}
             name="query"
             autoComplete="off"
             autoFocus
             placeholder="Search images and photos"
           />
           {/*19) добавляємо кнопку */}
-          <button type="submit">Search</button>
+          <button className={s.btn} type="submit">
+            Search
+          </button>
         </Form>
       </Formik>
     </header>

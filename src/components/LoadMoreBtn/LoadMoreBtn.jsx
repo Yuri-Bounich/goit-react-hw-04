@@ -1,8 +1,12 @@
+import s from './LoadMoreBtn.module.css';
+
 const LoadMoreBtn = ({ handleLoad }) => {
   return (
-    <div>
+    <div className={s.block}>
       {/* 26) створюємо кнопку лоад мор*/}
-      <button onClick={handleLoad}>Load more</button>
+      <button className={s.btn} onClick={handleLoad}>
+        Load more
+      </button>
     </div>
   );
 };

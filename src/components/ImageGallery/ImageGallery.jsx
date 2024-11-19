@@ -19,7 +19,11 @@ const ImageGallery = ({ images, onImageClick }) => {
             } /* 40)встановлення функції на клік */
           >
             {/* Використовується унікальний ключ */}
-            <ImageCard post={post.urls.small} alt={post.alt_description} />
+            <ImageCard
+              className={s.imageCard}
+              post={post.urls.small}
+              alt={post.alt_description}
+            />
           </li>
         ))}
       </ul>
